@@ -56,7 +56,7 @@ public class App {
 
         for (int i = wiseSayingList.size() - 1; i >=0; i--) {
             WiseSaying wiseSaying = wiseSayingList.get(i);
-            System.out.println("%d / %s / %s".formatted(wiseSaying.getId(), wiseSaying.getId(), wiseSaying.getContent()));
+            System.out.println("%d / %s / %s".formatted(wiseSaying.getId(), wiseSaying.getAuthor(), wiseSaying.getContent()));
         }
     }
 
@@ -69,6 +69,20 @@ public class App {
         }
 
         int id = Integer.parseInt(cmdBits[1]);
+
+        WiseSaying wiseSaying = null;
+        for (int i = 0; i < wiseSayingList.size(); i++) {
+            if (wiseSayingList.get(i).getId() == id) {
+                wiseSaying = wiseSayingList.get(i);
+            }
+        }
+
+        if (wiseSaying == null) {
+            System.out.println("해당 아이디는 존재하지 않습니다.");
+            return;
+        }
+
+        wiseSayingList.remove(wiseSaying);
 
         System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
     }
