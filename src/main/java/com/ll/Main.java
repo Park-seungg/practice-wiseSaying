@@ -1,5 +1,7 @@
 package com.ll;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -8,8 +10,7 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        WiseSaying[] wiseSayings = new WiseSaying[100];
-        int wiseSayingsLastIndex = -1;
+        List<WiseSaying> wiseSayingList = new ArrayList<>();
 
         int lastId = 0;
         while (true) {
@@ -34,15 +35,15 @@ public class Main {
                 wiseSaying.author = wiseSayingAuthor;
                 wiseSaying.content = wiseSayingContent;
 
-                wiseSayings[++wiseSayingsLastIndex] = wiseSaying;
+                wiseSayingList.add(wiseSaying);
 
                 System.out.println("%d번 명언이 등록되었습니다.".formatted(id) );
             } else if (cmd.equals("목록")) {
                 System.out.println("번호 / 작가 / 명언");
                 System.out.println("----------------------");
 
-                for (int i = wiseSayingsLastIndex; i >=0; i--) {
-                    WiseSaying wiseSaying = wiseSayings[i];
+                for (int i = wiseSayingList.size() - 1; i >=0; i--) {
+                    WiseSaying wiseSaying = wiseSayingList.get(i);
                     System.out.println("%d / %s / %s".formatted(wiseSaying.id, wiseSaying.author, wiseSaying.content));
                 }
             }
