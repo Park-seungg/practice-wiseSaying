@@ -70,6 +70,12 @@ public class App {
 
         int id = Integer.parseInt(cmdBits[1]);
 
+        delete(id);
+
+        System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
+    }
+
+    void delete(int id) {
         WiseSaying wiseSaying = null;
         for (int i = 0; i < wiseSayingList.size(); i++) {
             if (wiseSayingList.get(i).getId() == id) {
@@ -83,7 +89,5 @@ public class App {
         }
 
         wiseSayingList.remove(wiseSaying);
-
-        System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
     }
 }
