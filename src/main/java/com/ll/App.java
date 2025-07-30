@@ -1,13 +1,20 @@
 package com.ll;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class App {
     Scanner scanner = new Scanner(System.in);
     int lastId = 0;
     List<WiseSaying> wiseSayingList = new ArrayList<>();
+
+    public App() {
+        loadData();
+    }
 
     void run () {
         System.out.println("== 명언 앱 ==");
@@ -48,6 +55,8 @@ public class App {
         WiseSaying wiseSaying = new WiseSaying(++lastId, author, content );
 
         wiseSayingList.add(wiseSaying);
+        saveWiseSaying(wiseSaying);
+        saveLastId();
 
         return wiseSaying;
     }
@@ -82,6 +91,10 @@ public class App {
 
     void delete(WiseSaying wiseSaying) {
         wiseSayingList.remove(wiseSaying);
+        File jsonFile = new File("db/wiseSaying/" + wiseSaying.getId() + ".json");
+        if (jsonFile.exists()) {
+            jsonFile.delete();
+        }
     }
 
     void actionModify(String cmd) {
@@ -113,6 +126,7 @@ public class App {
     void modify(WiseSaying wiseSaying, String content, String author) {
         wiseSaying.setContent(content);
         wiseSaying.setAuthor(author);
+        saveWiseSaying(wiseSaying);
     }
 
     WiseSaying findById(int id) {
@@ -139,6 +153,76 @@ public class App {
             return -1;
         }
 
-        return Integer.parseInt(cmdBits[1]);
+        try {
+            return Integer.parseInt(cmdBits[1]);
+        } catch (NumberFormatException e) {
+            System.out.println("유효한 id를 입력해주세요.");
+            return -1;
+        }
+    }
+
+    private void loadData() {
+        File dir = new File("db/wiseSaying");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        File lastIdFile = new File("db/wiseSaying/lastId.txt");
+        if (lastIdFile.exists()) {
+            try (Scanner sc = new Scanner(lastIdFile)) {
+                if (sc.hasNextInt()) {
+                    lastId = sc.nextInt();
+                }
+            }
+        }
+
+        Pattern pattern = Pattern.compile("\\{\\s*\"id\":\\s*(\\d+),\\s*\"content\":\\s*\"(.*)\",\\s*\"author\":\\s*\"(.*)\"\\s*\\}");
+
+        for (int i = 1; i <= lastId; i++) {
+            File jsonFile = new File("db/wiseSaying/" + i + ".json");
+            if (jsonFile.exists()) {
+                try (BufferedReader br = new BufferedReader(new FileReader(jsonFile))) {
+                    StringBuilder sb = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line.trim());
+                    }
+                    String json = sb.toString();
+
+                    Matcher matcher = pattern.matcher(json);
+                    if (matcher.matches()) {
+                        int id = Integer.parseInt(matcher.group(1));
+                        String content = matcher.group(2);
+                        String author = matcher.group(3);
+                        wiseSayingList.add(new WiseSaying(id, author, content));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void saveWiseSaying(WiseSaying wiseSaying) {
+        String json = String.format("{\n  \"id\": %d,\n  \"content\": \"%s\",\n  \"author\": \"%s\"\n}",
+                wiseSaying.getId(),
+                wiseSaying.getContent().replace("\"", "\\\""),
+                wiseSaying.getAuthor().replace("\"", "\\\""));
+
+        File jsonFile = new File("db/wiseSaying/" + wiseSaying.getId() + ".json");
+        try (FileWriter fw = new FileWriter(jsonFile)) {
+            fw.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveLastId() {
+        File lastIdFile = new File("db/wiseSaying/lastId.txt");
+        try (FileWriter fw = new FileWriter(lastIdFile)) {
+            fw.write(String.valueOf(lastId));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
