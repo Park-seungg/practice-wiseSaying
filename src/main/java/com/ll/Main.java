@@ -41,7 +41,7 @@ public class Main {
                 System.out.println("번호 / 작가 / 명언");
                 System.out.println("----------------------");
 
-                for (int i = 0; i <= wiseSayingsLastIndex; i++) {
+                for (int i = wiseSayingsLastIndex; i >=0; i--) {
                     WiseSaying wiseSaying = wiseSayings[i];
                     System.out.println("%d / %s / %s".formatted(wiseSaying.id, wiseSaying.author, wiseSaying.content));
                 }
