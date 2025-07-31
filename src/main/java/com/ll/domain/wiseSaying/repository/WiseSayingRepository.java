@@ -3,6 +3,8 @@ package com.ll.domain.wiseSaying.repository;
 import com.ll.domain.wiseSaying.entity.WiseSaying;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -84,17 +86,11 @@ public class WiseSayingRepository {
 
     public WiseSaying findById(long id) {
         String filePath = BASE_DIR + "/" + id + ".json";
-        File file = new File(filePath);
-        if (!file.exists()) {
+        if (!new File(filePath).exists()) {
             return null;
         }
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-            String json = sb.toString();
+        try {
+            String json = Files.readString(Paths.get(filePath));
 
             Pattern contentPattern = Pattern.compile("\"content\": \"(.*?)\"");
             Matcher contentMatcher = contentPattern.matcher(json);
