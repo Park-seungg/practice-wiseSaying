@@ -1,4 +1,3 @@
-// src/main/java/com/ll/Main.java
 package com.ll;
 
 import java.util.Scanner;

@@ -1,7 +1,9 @@
 package com.ll;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Rq {
     private String action;
@@ -15,16 +17,13 @@ public class Rq {
 
         if (commandParts.length > 1) {
             String paramsStr = commandParts[1];
-            String[] paramsPairs = paramsStr.split("&");
-
-            for (String paramPair : paramsPairs) {
-                String[] paramPairParts = paramPair.split("=", 2);
-                if (paramPairParts.length == 2) {
-                    String key = paramPairParts[0].trim();
-                    String value = paramPairParts[1].trim();
-                    params.put(key, value);
-                }
-            }
+            params = Arrays.stream(paramsStr.split("&"))
+                    .map(paramPair -> paramPair.split("=", 2))
+                    .filter(paramPairParts -> paramPairParts.length == 2)
+                    .collect(Collectors.toMap(
+                            paramPairParts -> paramPairParts[0].trim(),
+                            paramPairParts -> paramPairParts[1].trim()
+                    ));
         }
     }
 
