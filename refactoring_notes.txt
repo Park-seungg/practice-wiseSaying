@@ -1,0 +1,17 @@
+Code Smells and Areas for Improvement:
+
+1. Dependency Management: Each layer creates its own dependencies (controllers create services, services create repositories) instead of using dependency injection.
+
+2. Manual JSON Parsing: The repository manually parses JSON without using libraries, which is error-prone and verbose.
+
+3. Business Logic in Controllers: The WiseSayingController contains pagination and search logic that should be in the service layer.
+
+4. Error Handling: File operations lack proper error handling, with some exceptions being silently caught and others propagating as RuntimeExceptions.
+
+5. Test Issues: Several tests are failing, indicating problems with the application logic, particularly in registration, deletion, and pagination.
+
+6. Code Duplication: WiseSayingService is instantiated multiple times (in both controllers), leading to potential state inconsistencies.
+
+7. Lack of Abstraction: Direct file I/O operations in the repository without abstraction makes it difficult to change the persistence mechanism.
+
+8. Formatting Issues: The output format doesn't match what the tests expect, causing test failures.
