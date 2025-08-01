@@ -19,10 +19,10 @@ public class Rq {
             String paramsStr = commandParts[1];
             params = Arrays.stream(paramsStr.split("&"))
                     .map(paramPair -> paramPair.split("=", 2))
-                    .filter(paramPairParts -> paramPairParts.length == 2)
+                    .filter(parts -> parts.length == 2 && !parts[1].trim().isEmpty())
                     .collect(Collectors.toMap(
-                            paramPairParts -> paramPairParts[0].trim(),
-                            paramPairParts -> paramPairParts[1].trim()
+                            parts -> parts[0].trim(),
+                            parts -> parts[1].trim()
                     ));
         }
     }
