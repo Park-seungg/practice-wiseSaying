@@ -1,7 +1,7 @@
 package com.ll;
 
 import com.ll.domain.wiseSaying.service.WiseSayingService;
-import com.ll.standard.util.TestUtil;
+import com.ll.util.TestUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Scanner;

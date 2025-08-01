@@ -1,4 +1,4 @@
-package com.ll.standard.util;
+package com.ll.util;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
